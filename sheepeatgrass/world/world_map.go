@@ -1,15 +1,14 @@
 package world
 
-import (
-	"zentest.io/sheepeatgrass/creature"
-)
-
 const (
 	WIDTH  = 12
 	HEIGHT = 12
 )
 
+/**
+ * World
+ */
 type World struct {
-	MAP [WIDTH][HEIGHT]creature.Creature
+	MAP [WIDTH][HEIGHT]ICreature
 	DAY int
 }

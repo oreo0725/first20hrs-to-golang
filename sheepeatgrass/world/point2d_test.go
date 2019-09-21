@@ -1,6 +1,9 @@
 package world
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestPoint2D_move(t *testing.T) {
 	p := Point2D{0, 0}
@@ -10,11 +13,12 @@ func TestPoint2D_move(t *testing.T) {
 	if p != expectPt {
 		t.Errorf("%v doesn't go East", p)
 	}
+	fmt.Println(p)
 
 	p.Move(North)
 
+	fmt.Println(p)
 	if p.X != 1 || p.Y != 1 {
 		t.Errorf("%v doesn't go North", p)
 	}
-
 }
