@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestPoint2D_move(t *testing.T) {
+func Test_move_WHEN_valid_THEN_update_pos(t *testing.T) {
 	p := Point2D{0, 0}
 	p.Move(East)
 
@@ -15,10 +15,25 @@ func TestPoint2D_move(t *testing.T) {
 	}
 	fmt.Println(p)
 
-	p.Move(North)
+	p.Move(South)
 
 	fmt.Println(p)
 	if p.X != 1 || p.Y != 1 {
 		t.Errorf("%v doesn't go North", p)
+	}
+}
+
+func Test_move_WHEN_invalid_THEN_getErr(t *testing.T) {
+	p := Point2D{0, 0}
+	err := p.Move(West)
+	t.Log(err)
+	if err == nil {
+		t.Errorf("Should throw err")
+	}
+
+	err = p.Move(North)
+	t.Log(err)
+	if err == nil {
+		t.Errorf("Should throw err")
 	}
 }
