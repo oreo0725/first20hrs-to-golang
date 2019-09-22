@@ -1,6 +1,7 @@
 package world
 
 //Life -  An abstract class
+//go:generate stringer -type=Life
 type Life struct {
 	lifePoint int
 	pos       Point2D
@@ -14,4 +15,11 @@ func (c *Life) Act() {
 //ICreature interface
 type ICreature interface {
 	Act()
+	GetHealth() int
+	GetName() string
+}
+
+//IAnimal -
+type IAnimal interface {
+	Move(dir Direction) bool
 }
