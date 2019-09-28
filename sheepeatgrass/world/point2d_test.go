@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test_move_WHEN_valid_THEN_update_pos(t *testing.T) {
+func TestMove_WHEN_valid_THEN_update_pos(t *testing.T) {
 	p := Point2D{0, 0}
 	p.Move(East)
 
@@ -23,7 +23,7 @@ func Test_move_WHEN_valid_THEN_update_pos(t *testing.T) {
 	}
 }
 
-func Test_move_WHEN_invalid_THEN_getErr(t *testing.T) {
+func TestMove_WHEN_invalid_THEN_getErr(t *testing.T) {
 	p := Point2D{0, 0}
 	err := p.Move(West)
 	t.Log(err)

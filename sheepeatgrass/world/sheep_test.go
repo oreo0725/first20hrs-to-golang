@@ -4,8 +4,9 @@ import (
 	"testing"
 )
 
-func Test_move_WHEN_validPos_THEN_updatedPos(t *testing.T) {
-	sheep := NewSheep("test", Point2D{1, 2})
+func TestMove_WHEN_validPos_THEN_updatedPos(t *testing.T) {
+	var w = &World{}
+	sheep := NewSheep("test", Point2D{1, 2}, w)
 	sheep.Move(South)
 
 	if sheep.pos.Y != 3 {
@@ -13,8 +14,9 @@ func Test_move_WHEN_validPos_THEN_updatedPos(t *testing.T) {
 	}
 }
 
-func Test_move_WHEN_invalidPos_THEN_notUpdated(t *testing.T) {
-	sheep := NewSheep("test1", Point2D{0, 2})
+func TestMove_WHEN_invalidPos_THEN_notUpdated(t *testing.T) {
+	var w = &World{}
+	sheep := NewSheep("test2", Point2D{0, 2}, w)
 	sheep.Move(South)
 
 	if sheep.pos.X != 0 {

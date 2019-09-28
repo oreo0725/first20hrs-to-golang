@@ -18,6 +18,14 @@ type World struct {
 	DAY int
 }
 
+func (w World) isAcceptPos(x int, y int) bool {
+	if !(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+		return false
+	}
+	//TODO check if empty space
+	return true
+}
+
 func (w World) String() string {
 	var str = fmt.Sprintf("===== Day: %v ======\n", w.DAY)
 	for _, col := range w.MAP {

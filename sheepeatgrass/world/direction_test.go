@@ -23,6 +23,6 @@ func TestDirection_String(t *testing.T) {
 	}
 }
 
-func Test_Direction_equals(t *testing.T) {
+func TestDirection_equals(t *testing.T) {
 
 }
