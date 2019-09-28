@@ -8,8 +8,8 @@ import (
 func TestWorld_String(t *testing.T) {
 
 	w := World{DAY: 0}
-	w.MAP[1][1] = NewSheep("1", Point2D{}, &w)
-	w.MAP[1][2] = NewGrass("11", Point2D{}, &w)
+	NewSheep("1", Point2D{1, 1}, &w)
+	NewGrass("11", Point2D{2, 2}, &w)
 	fmt.Println(w)
 }
 

@@ -1,18 +1,24 @@
 package world
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestCreature(t *testing.T) {
 	w := &World{}
 
-	var creature ICreature = NewSheep("1", Point2D{}, w)
+	var creature ICreature
+	var err error
+	creature, err = NewSheep("1", Point2D{0, 0}, w)
+
+	assert.Nil(t, err)
 
 	creature.Act()
 
-	creature = NewGrass("1", Point2D{}, w)
+	creature, err = NewGrass("1", Point2D{0, 1}, w)
 
+	assert.Nil(t, err)
 	creature.Act()
 
 	tt, ok := creature.(*Grass)

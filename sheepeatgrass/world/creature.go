@@ -23,6 +23,6 @@ type ICreature interface {
 
 //IAnimal -
 type IAnimal interface {
-	Move(dir Direction) bool
+	Move(dir Direction) error
 	Eat()
 }

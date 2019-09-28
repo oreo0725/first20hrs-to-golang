@@ -16,14 +16,21 @@ type Sheep struct {
 }
 
 //Constructor of Sheep
-func NewSheep(name string, pos Point2D, world *World) *Sheep {
-	return &Sheep{
+func NewSheep(name string, pos Point2D, world *World) (*Sheep, error) {
+	if world.MAP[pos.X][pos.Y] != nil {
+		return nil, fmt.Errorf("Point: %v is not empty", pos)
+	}
+
+	newSheep := &Sheep{
 		Life{
 			aliveDays: 0,
 			pos:       pos,
 			world:     world},
 		20,
 		name}
+	world.MAP[pos.X][pos.Y] = newSheep
+
+	return newSheep, nil
 }
 
 func (s *Sheep) Act() {
@@ -36,7 +43,9 @@ func (s *Sheep) GetName() string {
 }
 
 func (s *Sheep) Move(dir Direction) error {
-	return s.pos.Move(dir)
+	_, err := s.pos.Move(dir)
+
+	return err
 }
 
 func (s *Sheep) IsDead() bool {
@@ -45,4 +54,8 @@ func (s *Sheep) IsDead() bool {
 
 func (s *Sheep) GetAliveDays() int {
 	return s.aliveDays
+}
+
+func (s *Sheep) Eat() {
+	//TODO implement
 }

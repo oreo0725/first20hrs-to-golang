@@ -12,7 +12,7 @@ type Point2D struct {
 	Y int
 }
 
-func (p *Point2D) Move(dir Direction) error {
+func (p *Point2D) Move(dir Direction) (Point2D, error) {
 	newX, newY := p.X, p.Y
 	switch dir {
 	case East:
@@ -25,8 +25,7 @@ func (p *Point2D) Move(dir Direction) error {
 		newY = p.Y + 1
 	}
 	if newX < 0 || newY < 0 {
-		return fmt.Errorf("Invalid Point: [%v,%v]", newX, newY)
+		return Point2D{}, fmt.Errorf("Invalid Point: [%v,%v]", newX, newY)
 	}
-	p.X, p.Y = newX, newY
-	return nil
+	return Point2D{newX, newY}, nil
 }
