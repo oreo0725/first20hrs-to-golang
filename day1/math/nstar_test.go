@@ -2,7 +2,7 @@ package math
 
 import "testing"
 
-func Test_nstar(t *testing.T) {
+func TestNstar(t *testing.T) {
 	// type args struct {
 	// 	n int
 	// }
