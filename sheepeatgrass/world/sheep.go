@@ -5,13 +5,14 @@ import (
 )
 
 const (
-	sheepDeathDayLong = 70
+	sheepDeathDayLong     = 70
+	SheepDefaultLifePoint = 20
 )
 
 //Sheep - a sheep
 type Sheep struct {
 	Life      `default:"{\"lifePoint\":5}"`
-	lifePoint int
+	LifePoint int
 	name      string
 }
 
@@ -23,10 +24,10 @@ func NewSheep(name string, pos Point2D, world *World) (*Sheep, error) {
 
 	newSheep := &Sheep{
 		Life{
-			aliveDays: 0,
-			pos:       pos,
-			world:     world},
-		20,
+			AliveDays: 0,
+			Pos:       pos,
+			World:     world},
+		SheepDefaultLifePoint,
 		name}
 	world.MAP[pos.X][pos.Y] = newSheep
 
@@ -43,28 +44,35 @@ func (s *Sheep) GetName() string {
 }
 
 func (s *Sheep) Move(dir Direction) error {
-	newPos, err := s.pos.Move(dir)
+	newPos, err := s.Pos.Move(dir)
 
-	if !s.world.isAcceptPos(newPos.X, newPos.Y) {
+	if !s.World.isAcceptPos(newPos.X, newPos.Y) {
 		return fmt.Errorf("Not avail move to position: %v", newPos)
 	}
 
-	var listenser IPosChangeListenser = s.world
+	var listenser IWorldChangeListenser = s.World
 
-	listenser.onPosChanged(s.pos, newPos)
+	listenser.onPosChanged(s.Pos, newPos)
 
-	s.pos = newPos
+	s.Pos = newPos
 	return err
 }
 
 func (s *Sheep) IsDead() bool {
-	return s.aliveDays >= sheepDeathDayLong || s.lifePoint <= 0
+	return s.AliveDays >= sheepDeathDayLong || s.LifePoint <= 0
 }
 
 func (s *Sheep) GetAliveDays() int {
-	return s.aliveDays
+	return s.AliveDays
 }
 
-func (s *Sheep) Eat() {
+func (s *Sheep) GetPos() Point2D {
+	return s.Pos
+}
+
+func (s *Sheep) Eat(food IFood) {
 	//TODO implement
+	s.LifePoint += food.GetEnergyPoint()
+	var listenser IWorldChangeListenser = s.World
+	listenser.onCreatureEaten(s, food)
 }

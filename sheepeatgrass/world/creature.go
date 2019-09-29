@@ -3,9 +3,9 @@ package world
 //Life -  An abstract class
 //go:generate stringer -type=Life
 type Life struct {
-	pos       Point2D
-	aliveDays int
-	world     *World
+	Pos       Point2D
+	AliveDays int
+	World     *World
 }
 
 //Act - How a creature act within a day
@@ -19,10 +19,15 @@ type ICreature interface {
 	GetName() string
 	IsDead() bool
 	GetAliveDays() int
+	GetPos() Point2D
 }
 
 //IAnimal -
 type IAnimal interface {
 	Move(dir Direction) error
-	Eat()
+	Eat(food ICreature)
+}
+
+type IFood interface {
+	GetEnergyPoint() int
 }

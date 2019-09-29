@@ -50,3 +50,10 @@ func (w *World) onPosChanged(oldPos Point2D, newPos Point2D) {
 	w.MAP[newPos.X][newPos.Y], w.MAP[oldPos.X][oldPos.Y] = w.MAP[oldPos.X][oldPos.Y], nil
 	logger.Printf("position changed: \n %v", w)
 }
+
+func (w *World) onCreatureEaten(creature ICreature, food IFood) {
+	var eaten ICreature = food.(ICreature)
+	pos := eaten.GetPos()
+	logger.Printf("%v ate food[%v at %v]\n", creature.GetName(), eaten.GetName(), pos)
+	w.MAP[pos.X][pos.Y] = nil
+}

@@ -6,6 +6,7 @@ import (
 
 const (
 	grassDeathDayLong = 6
+	GrassEnergy       = 5
 )
 
 //Grass - a grass
@@ -24,11 +25,19 @@ func (g *Grass) GetName() string {
 }
 
 func (g *Grass) IsDead() bool {
-	return g.aliveDays >= grassDeathDayLong
+	return g.AliveDays >= grassDeathDayLong
 }
 
 func (g *Grass) GetAliveDays() int {
-	return g.aliveDays
+	return g.AliveDays
+}
+
+func (g *Grass) GetEnergyPoint() int {
+	return GrassEnergy
+}
+
+func (g *Grass) GetPos() Point2D {
+	return g.Pos
 }
 
 /**
@@ -39,12 +48,7 @@ func NewGrass(name string, pos Point2D, world *World) (*Grass, error) {
 		return nil, fmt.Errorf("Point: %v is not empty", pos)
 	}
 
-	newGrass := &Grass{
-		Life{
-			aliveDays: 0,
-			pos:       pos,
-			world:     world},
-		name}
+	newGrass := &Grass{Life{pos, 0, world}, name}
 
 	world.MAP[pos.X][pos.Y] = newGrass
 
