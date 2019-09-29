@@ -1,14 +1,14 @@
 package world
 
 import (
-	"fmt"
+	// "fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestNewSheepWHEN_atX0Y0_THEN_world_updated(t *testing.T) {
 	var w = &World{}
-	sheep, err := NewSheep("test", Point2D{0, 0}, w)
+	sheep, err := NewSheep("1", Point2D{0, 0}, w)
 
 	assert.Nil(t, err)
 
@@ -16,16 +16,20 @@ func TestNewSheepWHEN_atX0Y0_THEN_world_updated(t *testing.T) {
 }
 
 func TestMove_WHEN_validPos_THEN_updatedPos(t *testing.T) {
+	//GIVEN
 	var w = &World{}
 	sheep, _ := NewSheep("1", Point2D{1, 2}, w)
+	// fmt.Print(w)
 
+	//WHEN
 	sheep.Move(South)
 
+	//THEN
 	if sheep.pos.Y != 3 {
 		t.Errorf("Sheep should be at [1, 3], but %v", sheep.pos)
 	}
 
-	fmt.Print(w)
+	// fmt.Print(w)
 	if w.MAP[1][3] != sheep {
 		t.Errorf("Sheep should be at [1, 3] in the world")
 	}
@@ -33,9 +37,11 @@ func TestMove_WHEN_validPos_THEN_updatedPos(t *testing.T) {
 
 func TestMove_WHEN_invalidPos_THEN_notUpdated(t *testing.T) {
 	var w = &World{}
-	sheep, _ := NewSheep("test2", Point2D{0, 2}, w)
+	sheep, _ := NewSheep("2", Point2D{0, 2}, w)
 
-	sheep.Move(South)
+	err := sheep.Move(West)
+
+	assert.NotNil(t, err)
 
 	if sheep.pos.X != 0 {
 		t.Errorf("Sheep should be at [0, 2], but %v", sheep.pos)

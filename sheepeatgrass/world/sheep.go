@@ -43,8 +43,17 @@ func (s *Sheep) GetName() string {
 }
 
 func (s *Sheep) Move(dir Direction) error {
-	_, err := s.pos.Move(dir)
+	newPos, err := s.pos.Move(dir)
 
+	if !s.world.isAcceptPos(newPos.X, newPos.Y) {
+		return fmt.Errorf("Not avail move to position: %v", newPos)
+	}
+
+	var listenser IPosChangeListenser = s.world
+
+	listenser.onPosChanged(s.pos, newPos)
+
+	s.pos = newPos
 	return err
 }
 

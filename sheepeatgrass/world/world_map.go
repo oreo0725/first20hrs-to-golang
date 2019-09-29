@@ -3,12 +3,16 @@ package world
 import (
 	"fmt"
 	"golang.org/x/text/width"
+	"log"
+	"os"
 )
 
 const (
 	WIDTH  = 12
 	HEIGHT = 12
 )
+
+var logger = log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Ltime)
 
 /**
  * World
@@ -28,8 +32,9 @@ func (w World) isAcceptPos(x int, y int) bool {
 
 func (w World) String() string {
 	var str = fmt.Sprintf("===== Day: %v ======\n", w.DAY)
-	for _, col := range w.MAP {
-		for _, creature := range col {
+	for y := 0; y < HEIGHT; y++ {
+		for x := 0; x < WIDTH; x++ {
+			creature := w.MAP[x][y]
 			if creature == nil {
 				str += width.Widen.String(fmt.Sprintf("%5s", "◼️"))
 			} else {
@@ -39,4 +44,9 @@ func (w World) String() string {
 		str += "\n"
 	}
 	return str
+}
+
+func (w *World) onPosChanged(oldPos Point2D, newPos Point2D) {
+	w.MAP[newPos.X][newPos.Y], w.MAP[oldPos.X][oldPos.Y] = w.MAP[oldPos.X][oldPos.Y], nil
+	logger.Printf("position changed: \n %v", w)
 }
