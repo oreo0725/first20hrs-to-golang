@@ -57,3 +57,7 @@ func (w *World) onCreatureEaten(creature ICreature, food IFood) {
 	logger.Printf("%v ate food[%v at %v]\n", creature.GetName(), eaten.GetName(), pos)
 	w.MAP[pos.X][pos.Y] = nil
 }
+
+func (w *World) onLifeDead(life Life) {
+	w.MAP[life.Pos.X][life.Pos.Y] = nil
+}

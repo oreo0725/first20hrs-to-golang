@@ -13,6 +13,11 @@ func (c *Life) Act() {
 	// c.lifePoint - DAILY_CONSUME
 }
 
+func (c *Life) Die() {
+	var listener IWorldChangeListenser = c.World
+	listener.onLifeDead(*c)
+}
+
 //ICreature interface
 type ICreature interface {
 	Act()

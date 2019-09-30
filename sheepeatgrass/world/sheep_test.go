@@ -23,7 +23,6 @@ func TestMain(m *testing.M) {
 func setup() {
 	fmt.Println("===== Test setup ======")
 	w = &world.World{}
-	sheep, _ = world.NewSheep("1", world.Point2D{0, 0}, w)
 }
 
 func tearDown() {
@@ -41,6 +40,7 @@ func TestEat(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		setup()
+		sheep, _ = world.NewSheep("1", world.Point2D{0, 0}, w)
 		var grass *world.Grass
 		grass, _ = world.NewGrass("1", world.Point2D{0, 1}, w)
 		var food world.IFood = grass
@@ -57,14 +57,63 @@ func TestEat(t *testing.T) {
 	}
 }
 
+func TestDie(t *testing.T) {
+	testCases := []struct {
+		desc            string
+		expectLifePoint int
+	}{
+		{
+			desc: "A Sheep is dead, then remove it in the World",
+		},
+	}
+	for _, tC := range testCases {
+		setup()
+		sheep, _ = world.NewSheep("1", world.Point2D{0, 0}, w)
+		t.Run(tC.desc, func(t *testing.T) {
+			fmt.Println(w)
+			assert.NotNil(t, w.MAP[sheep.Pos.X][sheep.Pos.Y])
+
+			sheep.Die()
+			fmt.Println(w)
+			assert.Nil(t, w.MAP[sheep.Pos.X][sheep.Pos.Y])
+		})
+		tearDown()
+	}
+}
+
+func TestBreed(t *testing.T) {
+	testCases := []struct {
+		desc            string
+		expectLifePoint int
+	}{
+		{
+			desc: "Breed a new Sheep WHEN there is space",
+		},
+	}
+	for _, tC := range testCases {
+		setup()
+		t.Run(tC.desc, func(t *testing.T) {
+			fmt.Println(w)
+			assert.NotNil(t, w.MAP[sheep.Pos.X][sheep.Pos.Y])
+
+			sheep.Die()
+			fmt.Println(w)
+			assert.Nil(t, w.MAP[sheep.Pos.X][sheep.Pos.Y])
+		})
+		tearDown()
+	}
+}
+
 func TestNewSheepWHEN_atX0Y0_THEN_world_updated(t *testing.T) {
 	setup()
+	sheep, _ = world.NewSheep("1", world.Point2D{0, 0}, w)
 	assert.EqualValues(t, sheep, w.MAP[0][0])
 }
 
 func TestMove_WHEN_validPos_THEN_updatedPos(t *testing.T) {
 	//GIVEN
 	setup()
+	sheep, _ = world.NewSheep("1", world.Point2D{0, 0}, w)
 	//WHEN
 	sheep.Move(world.South)
 	//THEN
@@ -79,10 +128,13 @@ func TestMove_WHEN_validPos_THEN_updatedPos(t *testing.T) {
 }
 
 func TestMove_WHEN_invalidPos_THEN_notUpdated(t *testing.T) {
+	//GIVEN
 	setup()
+	sheep, _ = world.NewSheep("1", world.Point2D{0, 0}, w)
+	//WHEN
 	err := sheep.Move(world.West)
+	//THEN
 	assert.NotNil(t, err)
-
 	if sheep.Pos.X != 0 {
 		t.Errorf("Sheep should be at [0, 2], but %v", sheep.Pos)
 	}
