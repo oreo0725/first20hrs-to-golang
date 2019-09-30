@@ -15,13 +15,28 @@ func (c *Life) Act() {
 	// c.lifePoint - DAILY_CONSUME
 }
 
-func (c *Life) Die() {
-	var listener IWorldChangeListenser = c.World
-	listener.OnLifeDead(*c)
+func (s *Life) Die() {
+
 }
 
-func (c *Life) GetName() string {
-	return c.name
+func (s *Life) Breed() (ICreature, error) {
+	return nil, nil
+}
+
+func (s *Life) GetAliveDays() int {
+	return s.AliveDays
+}
+
+func (s *Life) GetName() string {
+	return s.name
+}
+
+func (s *Life) GetPos() Point2D {
+	return s.Pos
+}
+
+func (s *Life) IsDead() bool {
+	return false
 }
 
 //ICreature interface

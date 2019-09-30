@@ -69,10 +69,10 @@ func (w *World) OnCreatureEaten(creature ICreature, food IFood) {
 	w.MAP[pos.X][pos.Y] = nil
 }
 
-func (w *World) OnLifeDead(life Life) {
-	pos := life.Pos
+func (w *World) OnLifeDead(creature ICreature) {
+	pos := creature.GetPos()
 	w.MAP[pos.X][pos.Y] = nil
-	logger.Printf("%v die at [%v], it lived for %d days\n", life.GetName(), pos, life.AliveDays)
+	logger.Printf("%v die at [%v], it lived for %d days\n", creature.GetName(), pos, creature.GetAliveDays())
 }
 
 func (w *World) OnNewLifeBorn(creature ICreature) {

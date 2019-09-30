@@ -64,6 +64,11 @@ func (s *Sheep) IsDead() bool {
 	return s.AliveDays >= sheepDeathDayLong || s.LifePoint <= 0
 }
 
+func (s *Sheep) Die() {
+	var listener IWorldChangeListenser = s.World
+	listener.OnLifeDead(s)
+}
+
 func (s *Sheep) GetAliveDays() int {
 	return s.AliveDays
 }

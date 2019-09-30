@@ -27,6 +27,11 @@ func (g *Grass) IsDead() bool {
 	return g.AliveDays >= grassDeathDayLong
 }
 
+func (g *Grass) Die() {
+	var listener IWorldChangeListenser = g.World
+	listener.OnLifeDead(g)
+}
+
 func (g *Grass) GetAliveDays() int {
 	return g.AliveDays
 }
