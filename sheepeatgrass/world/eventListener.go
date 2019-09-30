@@ -1,7 +1,8 @@
 package world
 
 type IWorldChangeListenser interface {
-	onPosChanged(oldPos Point2D, newPos Point2D)
-	onCreatureEaten(creature ICreature, food IFood)
-	onLifeDead(life Life)
+	OnPosChanged(oldPos Point2D, newPos Point2D)
+	OnCreatureEaten(creature ICreature, food IFood)
+	OnLifeDead(life Life)
+	OnNewLifeBorn(creature ICreature)
 }

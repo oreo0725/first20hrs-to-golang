@@ -57,18 +57,26 @@ func (w World) String() string {
 	return str
 }
 
-func (w *World) onPosChanged(oldPos Point2D, newPos Point2D) {
+func (w *World) OnPosChanged(oldPos Point2D, newPos Point2D) {
 	w.MAP[newPos.X][newPos.Y], w.MAP[oldPos.X][oldPos.Y] = w.MAP[oldPos.X][oldPos.Y], nil
 	logger.Printf("position changed: \n %v", w)
 }
 
-func (w *World) onCreatureEaten(creature ICreature, food IFood) {
+func (w *World) OnCreatureEaten(creature ICreature, food IFood) {
 	var eaten ICreature = food.(ICreature)
 	pos := eaten.GetPos()
 	logger.Printf("%v ate food[%v at %v]\n", creature.GetName(), eaten.GetName(), pos)
 	w.MAP[pos.X][pos.Y] = nil
 }
 
-func (w *World) onLifeDead(life Life) {
-	w.MAP[life.Pos.X][life.Pos.Y] = nil
+func (w *World) OnLifeDead(life Life) {
+	pos := life.Pos
+	w.MAP[pos.X][pos.Y] = nil
+	logger.Printf("%v die at [%v], it lived for %d days\n", life.GetName(), pos, life.AliveDays)
+}
+
+func (w *World) OnNewLifeBorn(creature ICreature) {
+	pos := creature.GetPos()
+	w.MAP[pos.X][pos.Y] = creature
+	logger.Printf("%v was born at [%v]\n", creature.GetName(), pos)
 }

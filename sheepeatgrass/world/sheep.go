@@ -13,12 +13,11 @@ const (
 type Sheep struct {
 	Life      `default:"{\"lifePoint\":5}"`
 	LifePoint int
-	name      string
 }
 
 //Constructor of Sheep
 func NewSheep(name string, pos Point2D, world *World) (*Sheep, error) {
-	if world.MAP[pos.X][pos.Y] != nil {
+	if !world.IsAcceptPos(pos.X, pos.Y) {
 		return nil, fmt.Errorf("Point: %v is not empty", pos)
 	}
 
@@ -28,10 +27,11 @@ func NewSheep(name string, pos Point2D, world *World) (*Sheep, error) {
 			Pos:         Point2D{pos.X, pos.Y},
 			World:       world,
 			ChildrenNum: 0,
+			name:        name,
 		},
 		SheepDefaultLifePoint,
-		name}
-	world.MAP[pos.X][pos.Y] = newSheep
+	}
+	world.OnNewLifeBorn(newSheep)
 
 	return newSheep, nil
 }
@@ -54,7 +54,7 @@ func (s *Sheep) Move(dir Direction) error {
 
 	var listenser IWorldChangeListenser = s.World
 
-	listenser.onPosChanged(s.Pos, newPos)
+	listenser.OnPosChanged(s.Pos, newPos)
 
 	s.Pos = newPos
 	return err
@@ -88,5 +88,5 @@ func (s *Sheep) GetPos() Point2D {
 func (s *Sheep) Eat(food IFood) {
 	s.LifePoint += food.GetEnergyPoint()
 	var listenser IWorldChangeListenser = s.World
-	listenser.onCreatureEaten(s, food)
+	listenser.OnCreatureEaten(s, food)
 }

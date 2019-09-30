@@ -7,6 +7,7 @@ type Life struct {
 	AliveDays   int
 	World       *World
 	ChildrenNum int
+	name        string
 }
 
 //Act - How a creature act within a day
@@ -16,7 +17,11 @@ func (c *Life) Act() {
 
 func (c *Life) Die() {
 	var listener IWorldChangeListenser = c.World
-	listener.onLifeDead(*c)
+	listener.OnLifeDead(*c)
+}
+
+func (c *Life) GetName() string {
+	return c.name
 }
 
 //ICreature interface

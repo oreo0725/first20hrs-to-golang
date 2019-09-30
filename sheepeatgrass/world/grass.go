@@ -13,7 +13,6 @@ const (
 //go:generate stringer -type=Grass
 type Grass struct {
 	Life `default:"{\"lifePoint\":3}"`
-	name string
 }
 
 func (g *Grass) Act() {
@@ -49,13 +48,11 @@ func (g *Grass) Breed() (ICreature, error) {
  * Constructor of Grass
  */
 func NewGrass(name string, pos Point2D, world *World) (*Grass, error) {
-	if world.MAP[pos.X][pos.Y] != nil {
+	if !world.IsAcceptPos(pos.X, pos.Y) {
 		return nil, fmt.Errorf("Point: %v is not empty", pos)
 	}
-
-	newGrass := &Grass{Life{pos, 0, world, 0}, name}
-
-	world.MAP[pos.X][pos.Y] = newGrass
+	newGrass := &Grass{Life{pos, 0, world, 0, name}}
+	world.OnNewLifeBorn(newGrass)
 
 	return newGrass, nil
 }
