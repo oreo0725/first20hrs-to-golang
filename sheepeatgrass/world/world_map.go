@@ -22,12 +22,23 @@ type World struct {
 	DAY int
 }
 
-func (w World) isAcceptPos(x int, y int) bool {
-	if !(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+func (w World) IsAcceptPos(x int, y int) bool {
+	// fmt.Printf("check if accept pos (%d,%d)\n", x, y)
+	if !(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) || w.MAP[x][y] != nil {
 		return false
 	}
-	//TODO check if empty space
 	return true
+}
+
+func (w World) GetAnEmptyNeighbour(pos Point2D) *Point2D {
+	dir := RandDirection()
+	for i := 0; i < 4; i++ {
+		if newPos, err := pos.Move(dir); err == nil && w.IsAcceptPos(newPos.X, newPos.Y) {
+			return &newPos
+		}
+		dir = dir.Next()
+	}
+	return nil
 }
 
 func (w World) String() string {

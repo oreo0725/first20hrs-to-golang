@@ -42,8 +42,8 @@ func TestWorld_isAcceptPos(t *testing.T) {
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
 
-			if got := w.isAcceptPos(tt.x, tt.y); got != tt.want {
-				t.Errorf("World.isAcceptPos() = %v, want %v", got, tt.want)
+			if got := w.IsAcceptPos(tt.x, tt.y); got != tt.want {
+				t.Errorf("World.IsAcceptPos() = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -40,6 +40,11 @@ func (g *Grass) GetPos() Point2D {
 	return g.Pos
 }
 
+func (g *Grass) Breed() (ICreature, error) {
+	//TODO implementation
+	return nil, nil
+}
+
 /**
  * Constructor of Grass
  */

@@ -24,9 +24,11 @@ func NewSheep(name string, pos Point2D, world *World) (*Sheep, error) {
 
 	newSheep := &Sheep{
 		Life{
-			AliveDays: 0,
-			Pos:       pos,
-			World:     world},
+			AliveDays:   0,
+			Pos:         Point2D{pos.X, pos.Y},
+			World:       world,
+			ChildrenNum: 0,
+		},
 		SheepDefaultLifePoint,
 		name}
 	world.MAP[pos.X][pos.Y] = newSheep
@@ -46,7 +48,7 @@ func (s *Sheep) GetName() string {
 func (s *Sheep) Move(dir Direction) error {
 	newPos, err := s.Pos.Move(dir)
 
-	if !s.World.isAcceptPos(newPos.X, newPos.Y) {
+	if !s.World.IsAcceptPos(newPos.X, newPos.Y) {
 		return fmt.Errorf("Not avail move to position: %v", newPos)
 	}
 
@@ -66,12 +68,24 @@ func (s *Sheep) GetAliveDays() int {
 	return s.AliveDays
 }
 
+func (s *Sheep) Breed() (ICreature, error) {
+	availPos := s.World.GetAnEmptyNeighbour(s.Pos)
+	if availPos == nil {
+		return nil, fmt.Errorf("No empty space to breed, at[%v]", s.Pos)
+	}
+	s.ChildrenNum++
+	newSheep, err := NewSheep(fmt.Sprintf("%v.%v", s.name, s.ChildrenNum),
+		Point2D{availPos.X, availPos.Y},
+		s.World)
+	fmt.Printf("newBorn of [%v] at [%v]\n", s.GetName(), availPos)
+	return newSheep, err
+}
+
 func (s *Sheep) GetPos() Point2D {
 	return s.Pos
 }
 
 func (s *Sheep) Eat(food IFood) {
-	//TODO implement
 	s.LifePoint += food.GetEnergyPoint()
 	var listenser IWorldChangeListenser = s.World
 	listenser.onCreatureEaten(s, food)

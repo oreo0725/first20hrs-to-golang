@@ -13,12 +13,20 @@ const (
 	West
 )
 
+var Directions = []Direction{
+	North, East, South, West,
+}
+
 func (d Direction) String() string {
 	return [...]string{"North", "East", "South", "West"}[d]
+}
+
+func (d Direction) Next() Direction {
+	return Directions[(d+1)%4]
 }
 
 // Get a direction randomly
 func RandDirection() Direction {
 	// rand.Seed(time.Now().UnixNano())
-	return [...]Direction{North, East, South, West}[rand.RandInt(4)]
+	return Directions[rand.RandInt(4)]
 }
