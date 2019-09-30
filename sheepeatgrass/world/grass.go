@@ -53,7 +53,7 @@ func NewGrass(name string, pos Point2D, world *World) (*Grass, error) {
 		return nil, fmt.Errorf("Point: %v is not empty", pos)
 	}
 
-	newGrass := &Grass{Life{pos, 0, world}, name}
+	newGrass := &Grass{Life{pos, 0, world, 0}, name}
 
 	world.MAP[pos.X][pos.Y] = newGrass
 
