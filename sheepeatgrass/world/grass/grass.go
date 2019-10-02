@@ -1,7 +1,10 @@
-package world
+package grass
 
 import (
 	"fmt"
+	"zentest.io/sheepeatgrass/world"
+	"zentest.io/sheepeatgrass/world/creature"
+	"zentest.io/sheepeatgrass/world/geo"
 )
 
 const (
@@ -12,7 +15,7 @@ const (
 //Grass - a grass
 //go:generate stringer -type=Grass
 type Grass struct {
-	Life `default:"{\"lifePoint\":3}"`
+	world.Life `default:"{\"lifePoint\":3}"`
 }
 
 func (g *Grass) Act() {
@@ -20,7 +23,7 @@ func (g *Grass) Act() {
 }
 
 func (g *Grass) GetName() string {
-	return "🌱" + g.name
+	return "🌱" + g.Life.Name
 }
 
 func (g *Grass) IsDead() bool {
@@ -28,7 +31,7 @@ func (g *Grass) IsDead() bool {
 }
 
 func (g *Grass) Die() {
-	var listener IWorldChangeListenser = g.World
+	var listener creature.IWorldChangeListenser = g.World
 	listener.OnLifeDead(g)
 }
 
@@ -40,11 +43,11 @@ func (g *Grass) GetEnergyPoint() int {
 	return GrassEnergy
 }
 
-func (g *Grass) GetPos() Point2D {
+func (g *Grass) GetPos() geo.Point2D {
 	return g.Pos
 }
 
-func (g *Grass) Breed() (ICreature, error) {
+func (g *Grass) Breed() (creature.ICreature, error) {
 	//TODO implementation
 	return nil, nil
 }
@@ -52,12 +55,12 @@ func (g *Grass) Breed() (ICreature, error) {
 /**
  * Constructor of Grass
  */
-func NewGrass(name string, pos Point2D, world *World) (*Grass, error) {
-	if !world.IsAcceptPos(pos.X, pos.Y) {
+func NewGrass(name string, pos geo.Point2D, w *world.World) (*Grass, error) {
+	if !w.IsAcceptPos(pos.X, pos.Y) {
 		return nil, fmt.Errorf("Point: %v is not empty", pos)
 	}
-	newGrass := &Grass{Life{pos, 0, world, 0, name}}
-	world.OnNewLifeBorn(newGrass)
+	newGrass := &Grass{world.Life{pos, 0, w, 0, name}}
+	w.OnNewLifeBorn(newGrass)
 
 	return newGrass, nil
 }

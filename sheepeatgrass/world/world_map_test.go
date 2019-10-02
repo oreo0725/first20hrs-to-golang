@@ -1,21 +1,26 @@
-package world
+package world_test
 
 import (
 	"fmt"
 	"testing"
+	"zentest.io/sheepeatgrass/world"
+	"zentest.io/sheepeatgrass/world/creature"
+	"zentest.io/sheepeatgrass/world/geo"
+	"zentest.io/sheepeatgrass/world/grass"
+	"zentest.io/sheepeatgrass/world/sheep"
 )
 
 func TestWorld_String(t *testing.T) {
 
-	w := World{DAY: 0}
-	NewSheep("1", Point2D{1, 1}, &w)
-	NewGrass("11", Point2D{2, 2}, &w)
+	w := world.World{DAY: 0}
+	sheep.NewSheep("1", geo.Point2D{1, 1}, &w)
+	grass.NewGrass("11", geo.Point2D{2, 2}, &w)
 	fmt.Println(w)
 }
 
 func TestWorld_isAcceptPos(t *testing.T) {
 	type fields struct {
-		MAP [WIDTH][HEIGHT]ICreature
+		MAP [world.WIDTH][world.HEIGHT]creature.ICreature
 		DAY int
 	}
 	type args struct {
@@ -23,7 +28,7 @@ func TestWorld_isAcceptPos(t *testing.T) {
 		y int
 	}
 
-	w := World{}
+	w := world.World{}
 	tests := []struct {
 		x    int
 		y    int

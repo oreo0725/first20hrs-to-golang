@@ -1,23 +1,23 @@
-package world_test
+package geo_test
 
 import (
 	"testing"
+	"zentest.io/sheepeatgrass/world/geo"
 
 	"zentest.io/sheepeatgrass/util/rand"
 
 	"github.com/stretchr/testify/assert"
-	"zentest.io/sheepeatgrass/world"
 )
 
 func TestDirection_String(t *testing.T) {
 	tests := []struct {
 		name string
-		d    world.Direction
+		d    geo.Direction
 		want string
 	}{
-		{"North", world.North, "North"},
-		{"South", world.South, "South"},
-		{"East", world.East, "East"},
+		{"North", geo.North, "North"},
+		{"South", geo.South, "South"},
+		{"East", geo.East, "East"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -30,7 +30,7 @@ func TestDirection_String(t *testing.T) {
 
 func TestRandDirection(t *testing.T) {
 	rand.FixRandInt(2)
-	d := world.RandDirection()
+	d := geo.RandDirection()
 	t.Log(d)
-	assert.Equal(t, world.South, d)
+	assert.Equal(t, geo.South, d)
 }

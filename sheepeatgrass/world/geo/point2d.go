@@ -1,4 +1,4 @@
-package world
+package geo
 
 import (
 	"fmt"
