@@ -49,7 +49,16 @@ func (g *Grass) GetPos() geo.Point2D {
 
 func (g *Grass) Breed() (creature.ICreature, error) {
 	//TODO implementation
-	return nil, nil
+	availPos := g.World.GetAnEmptyNeighbour(g.Pos)
+	if availPos == nil {
+		return nil, fmt.Errorf("No empty space to breed, at[%v]", g.Pos)
+	}
+	g.ChildrenNum++
+	newSheep, err := NewGrass(fmt.Sprintf("%v.%v", g.Name, g.ChildrenNum),
+		geo.Point2D{availPos.X, availPos.Y},
+		g.World)
+	fmt.Printf("newBorn of [%v] at [%v]\n", g.GetName(), availPos)
+	return newSheep, err
 }
 
 /**
