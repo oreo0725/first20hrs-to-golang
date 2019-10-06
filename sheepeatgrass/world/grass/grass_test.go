@@ -28,26 +28,57 @@ func TestGrass_Breed(t *testing.T) {
 		x, y int
 	}
 
+	var assertThatNewBornSucc = func() {
+		// WHEN
+		var c creature.ICreature = grass1
+		newBorn, err := c.Breed()
+		assert.Nil(t, err)
+		assert.NotNil(t, newBorn)
+		fmt.Println(w)
+		// THEN
+		posNewBorn := newBorn.GetPos()
+		assert.EqualValues(t, newBorn, w.MAP[posNewBorn.X][posNewBorn.Y])
+	}
+
+	var assertThatCannotBreed = func() {
+		// WHEN
+		var c creature.ICreature = grass1
+		_, err := c.Breed()
+		assert.NotNil(t, err)
+		fmt.Println(w)
+		// THEN
+	}
+
 	testCases := []struct {
-		desc     string
-		grassPos geo.Point2D
-		sheepPos []pos
+		desc       string
+		grassPos   geo.Point2D
+		sheepPos   []pos
+		assertFunc func()
 	}{
 		{
-			desc:     "Breed a new grass WHEN empty around",
-			grassPos: geo.Point2D{1, 1},
-			sheepPos: []pos{},
+			desc:       "Breed a new grass WHEN empty around",
+			grassPos:   geo.Point2D{1, 1},
+			sheepPos:   []pos{},
+			assertFunc: assertThatNewBornSucc,
 		},
-		//{
-		//	desc:     "Breed a new Sheep WHEN it is at corner, finally breed",
-		//	sheepPos: world.Point2D{0, 0},
-		//	grassPos: []pos{{0, 1}},
-		//},
-		//{
-		//	desc:     "Breed a new Sheep WHEN it is sround by 3 others, finally breed",
-		//	sheepPos: world.Point2D{1, 1},
-		//	grassPos: []pos{{2, 1}, {1, 0}, {1, 2}},
-		//},
+		{
+			desc:       "Breed a new Grass WHEN it is at corner, finally breed",
+			grassPos:   geo.Point2D{0, 0},
+			sheepPos:   []pos{{1, 0}},
+			assertFunc: assertThatNewBornSucc,
+		},
+		{
+			desc:       "Breed a new Grass WHEN it is surround by 3 others, finally breed",
+			grassPos:   geo.Point2D{1, 1},
+			sheepPos:   []pos{{2, 1}, {1, 0}, {1, 2}},
+			assertFunc: assertThatNewBornSucc,
+		},
+		{
+			desc:       "Breed a new Grass WHEN no empty neighbour, THEN breed fail",
+			grassPos:   geo.Point2D{0, 0},
+			sheepPos:   []pos{{1, 0}, {0, 1}},
+			assertFunc: assertThatCannotBreed,
+		},
 	}
 	for _, tC := range testCases {
 		setup()
@@ -60,17 +91,7 @@ func TestGrass_Breed(t *testing.T) {
 			}
 
 			fmt.Println(w)
-
-			var c creature.ICreature = grass1
-			newBorn, err := c.Breed()
-
-			assert.Nil(t, err)
-			assert.NotNil(t, newBorn)
-
-			fmt.Println(w)
-
-			posNewBorn := newBorn.GetPos()
-			assert.EqualValues(t, newBorn, w.MAP[posNewBorn.X][posNewBorn.Y])
+			tC.assertFunc()
 
 		})
 		tearDown()
