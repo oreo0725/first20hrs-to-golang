@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	WIDTH  = 12
-	HEIGHT = 12
+	WIDTH  = 35
+	HEIGHT = 20
 )
 
 var logger = log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Ltime)

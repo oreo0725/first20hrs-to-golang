@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 	"zentest.io/sheepeatgrass/world"
-	"zentest.io/sheepeatgrass/world/creature"
 	"zentest.io/sheepeatgrass/world/geo"
 	"zentest.io/sheepeatgrass/world/grass"
 	"zentest.io/sheepeatgrass/world/sheep"
@@ -19,15 +18,6 @@ func TestWorld_String(t *testing.T) {
 }
 
 func TestWorld_isAcceptPos(t *testing.T) {
-	type fields struct {
-		MAP [world.WIDTH][world.HEIGHT]creature.ICreature
-		DAY int
-	}
-	type args struct {
-		x int
-		y int
-	}
-
 	w := world.World{}
 	tests := []struct {
 		x    int
@@ -40,8 +30,8 @@ func TestWorld_isAcceptPos(t *testing.T) {
 		{-1, 0, false},
 		{-1, -1, false},
 		{0, -1, false},
-		{12, 0, false},
-		{11, 13, false},
+		{world.WIDTH, 0, false},
+		{11, world.HEIGHT, false},
 		{11, 0, true},
 	}
 	for _, tt := range tests {
@@ -51,5 +41,24 @@ func TestWorld_isAcceptPos(t *testing.T) {
 				t.Errorf("World.IsAcceptPos() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestWorldLoopWHEN_aSheep_pass_aDay_THEN_expection(t *testing.T) {
+	testCases := []struct {
+		desc	string
+
+	}{
+		{
+			desc: "",
+
+		},
+	}
+	for _, tC := range testCases {
+	    //setup()
+		t.Run(tC.desc, func(t *testing.T) {
+
+		})
+		//tearDown()
 	}
 }
