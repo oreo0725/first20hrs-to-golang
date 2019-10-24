@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 	"zentest.io/sheepeatgrass/world"
+	"zentest.io/sheepeatgrass/world/config"
 	"zentest.io/sheepeatgrass/world/geo"
 	"zentest.io/sheepeatgrass/world/grass"
 	"zentest.io/sheepeatgrass/world/sheep"
@@ -30,8 +31,8 @@ func TestWorld_isAcceptPos(t *testing.T) {
 		{-1, 0, false},
 		{-1, -1, false},
 		{0, -1, false},
-		{world.WIDTH, 0, false},
-		{11, world.HEIGHT, false},
+		{config.Width, 0, false},
+		{11, config.Height, false},
 		{11, 0, true},
 	}
 	for _, tt := range tests {
