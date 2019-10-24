@@ -1,9 +1,9 @@
 package config
 
 const (
-	Width  = 10
-	Height = 10
-	DefaultSheepAmount = 1
+	Width  = 35
+	Height = 20
+	DefaultSheepAmount = 5
 	DefaultGrassAmount = 10
 )
 

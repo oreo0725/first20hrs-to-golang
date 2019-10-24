@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"container/list"
 	"fmt"
 	"os"
 	"os/exec"
@@ -10,7 +9,6 @@ import (
 	"strings"
 	"zentest.io/sheepeatgrass/world"
 	"zentest.io/sheepeatgrass/world/config"
-	"zentest.io/sheepeatgrass/world/creature"
 	"zentest.io/sheepeatgrass/world/geo"
 	"zentest.io/sheepeatgrass/world/grass"
 	"zentest.io/sheepeatgrass/world/sheep"
@@ -47,33 +45,19 @@ func main() {
 		// convert CRLF to LF
 		text = strings.Replace(text, "\n", "", -1)
 
-		unmovedList := list.New()
+		var days int
 		if text == "" {
-			for _, row := range w.MAP {
-				for _, c := range row {
-					if c != nil {
-						unmovedList.PushBack(c)
-					}
-				}
-			}
-		}
+			days = 1
 
-		for unmovedList.Len() > 0 {
-			e := unmovedList.Front()
-			c, ok := e.Value.(creature.ICreature)// First element
-			if ok {
-				//FIXME, what else if the creature is already dead of eaten by the other
-				c.Act()
-			}
-			unmovedList.Remove(e) // Dequeue
+		} else if inputDays, err := strconv.Atoi(text); err == nil {
+			fmt.Printf("Fastforward %v days.\n", inputDays)
+			days = inputDays
+		}
+		for i := 0; i < days; i++ {
+			w.PlayADay()
 		}
 		fmt.Println(w)
-		fmt.Println(unmovedList.Len())
-
-		w.DAY++
-
-
 	}
 
-
 }
+

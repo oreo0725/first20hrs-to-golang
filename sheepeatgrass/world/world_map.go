@@ -1,6 +1,7 @@
 package world
 
 import (
+	"container/list"
 	"fmt"
 	"golang.org/x/text/width"
 	"log"
@@ -69,24 +70,46 @@ func (w World) String() string {
 func (w *World) OnPosChanged(oldPos geo.Point2D, newPos geo.Point2D) {
 	w.MAP[newPos.X][newPos.Y], w.MAP[oldPos.X][oldPos.Y] = w.MAP[oldPos.X][oldPos.Y], nil
 	iCreature := w.MAP[newPos.X][newPos.Y]
-	logger.Printf("position changed: %v from %v => %v\n", iCreature.GetName(), oldPos, newPos)
+	logger.Printf("[Day%v] position changed: %v from %v => %v\n", w.DAY, iCreature.GetName(), oldPos, newPos)
 }
 
 func (w *World) OnCreatureEaten(c creature.ICreature, food creature.IFood) {
 	var eaten = food.(creature.ICreature)
 	pos := eaten.GetPos()
 	eaten.Die()
-	logger.Printf("%v ate food[%v at %v]\n", c.GetName(), eaten.GetName(), pos)
+	logger.Printf("[Day%v] %v ate food[%v at %v]\n", w.DAY, c.GetName(), eaten.GetName(), pos)
 }
 
 func (w *World) OnLifeDead(c creature.ICreature) {
 	pos := c.GetPos()
 	w.MAP[pos.X][pos.Y] = nil
-	logger.Printf("%v die at [%v], it lived for %d days\n", c.GetName(), pos, c.GetAliveDays())
+	logger.Printf("[Day%v] %v die at [%v], it lived for %d days\n", w.DAY, c.GetName(), pos, c.GetAliveDays())
 }
 
 func (w *World) OnNewLifeBorn(c creature.ICreature) {
 	pos := c.GetPos()
 	w.MAP[pos.X][pos.Y] = c
-	logger.Printf("%v was born at [%v]\n", c.GetName(), pos)
+	logger.Printf("[Day%v] %v was born at [%v]\n", w.DAY, c.GetName(), pos)
+}
+
+func (w *World) PlayADay() {
+	logger.Printf("[Day%v] BEGIN ---------\n", w.DAY)
+	unmovedList := list.New()
+	for _, row := range w.MAP {
+		for _, c := range row {
+			if c != nil {
+				unmovedList.PushBack(c)
+			}
+		}
+	}
+	for unmovedList.Len() > 0 {
+		e := unmovedList.Front()
+		c, ok := e.Value.(creature.ICreature) // First element
+		if ok {
+			c.Act()
+		}
+		unmovedList.Remove(e) // Dequeue
+	}
+	logger.Printf("[Day%v] END ---------- \n", w.DAY)
+	w.DAY++
 }
