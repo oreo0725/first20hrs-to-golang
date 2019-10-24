@@ -77,7 +77,6 @@ func (g *Grass) Breed() (creature.ICreature, error) {
 	newSheep, err := NewGrass(fmt.Sprintf("%v", gen*10+g.ChildrenNum),
 		geo.Point2D{availPos.X, availPos.Y},
 		g.World)
-	fmt.Printf("newBorn of [%v] at [%v]\n", g.GetName(), availPos)
 	return newSheep, err
 }
 
