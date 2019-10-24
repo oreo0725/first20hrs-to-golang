@@ -2,6 +2,7 @@ package sheep
 
 import (
 	"fmt"
+	"strconv"
 	"zentest.io/sheepeatgrass/world"
 	"zentest.io/sheepeatgrass/world/creature"
 	"zentest.io/sheepeatgrass/world/geo"
@@ -41,33 +42,71 @@ func NewSheep(name string, pos geo.Point2D, w *world.World) (*Sheep, error) {
 
 func (s *Sheep) Act() {
 	// c.lifePoint - DAILY_CONSUME
-	fmt.Printf("I am %T\n", s)
+	//fmt.Printf("I am %v\n", s.GetName())
+
+	if s.IsDead() {
+		return
+
+	} else if s.isDying() {
+		s.Die()
+
+	} else if s.canBreed() {
+		s.Breed()
+
+	} else {
+		//should eat a grass if the next position standing a grass
+		nextDir := geo.RandDirection()
+		newPos, err := s.Pos.Move(nextDir)
+		if err == nil {
+			if iCreature := s.World.MAP[newPos.X][newPos.Y]; iCreature != nil {
+				food, ok := iCreature.(creature.IFood)
+				if ok {
+					s.Eat(food)
+				}
+			}
+		}
+
+		if e := s.Move(nextDir); e != nil {
+			fmt.Printf("%v Cannot move, just stand\n", s.GetName())
+		}
+	}
+	s.AliveDays++
+	s.LifePoint--
+}
+
+func (s *Sheep) canBreed() bool {
+	return s.AliveDays >= 50 && s.AliveDays <= 55
 }
 
 func (s *Sheep) GetName() string {
-	return "🐏" + s.Name
+	return "🐏" + strconv.Itoa(s.LifePoint)
 }
 
 func (s *Sheep) Move(dir geo.Direction) error {
 	newPos, err := s.Pos.Move(dir)
 
-	if !s.World.IsAcceptPos(newPos.X, newPos.Y) {
+	if err != nil || !s.World.IsAcceptPos(newPos.X, newPos.Y) {
 		return fmt.Errorf("Not avail move to position: %v", newPos)
 	}
 
-	var listenser creature.IWorldChangeListenser = s.World
+	var listener creature.IWorldChangeListenser = s.World
 
-	listenser.OnPosChanged(s.Pos, newPos)
+	listener.OnPosChanged(s.Pos, newPos)
 
 	s.Pos = newPos
-	return err
+	return nil
 }
 
 func (s *Sheep) IsDead() bool {
+	return s.Life.IsDead
+}
+
+func (s *Sheep) isDying() bool {
 	return s.AliveDays >= sheepDeathDayLong || s.LifePoint <= 0
 }
 
 func (s *Sheep) Die() {
+	s.Life.IsDead = true
 	var listener creature.IWorldChangeListenser = s.World
 	listener.OnLifeDead(s)
 }
@@ -82,7 +121,8 @@ func (s *Sheep) Breed() (creature.ICreature, error) {
 		return nil, fmt.Errorf("No empty space to breed, at[%v]", s.Pos)
 	}
 	s.ChildrenNum++
-	newSheep, err := NewSheep(fmt.Sprintf("%v.%v", s.Name, s.ChildrenNum),
+	gen, _ := strconv.Atoi(s.Name)
+	newSheep, err := NewSheep(fmt.Sprintf("%v", gen*10+s.ChildrenNum),
 		geo.Point2D{availPos.X, availPos.Y},
 		s.World)
 	fmt.Printf("newBorn of [%v] at [%v]\n", s.GetName(), availPos)
@@ -95,6 +135,6 @@ func (s *Sheep) GetPos() geo.Point2D {
 
 func (s *Sheep) Eat(food creature.IFood) {
 	s.LifePoint += food.GetEnergyPoint()
-	var listenser creature.IWorldChangeListenser = s.World
-	listenser.OnCreatureEaten(s, food)
+	var listener creature.IWorldChangeListenser = s.World
+	listener.OnCreatureEaten(s, food)
 }
