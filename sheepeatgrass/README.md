@@ -1,4 +1,4 @@
-# sheepeatgrass
+# Sheep eats grass 羊吃草
 
 ## A Simulation world - Sheeps and Grass
 This is a simulator of a simple world, there are only 2 creatures in this world, Sheeps and Grass.
@@ -8,15 +8,20 @@ The world has following rules to perform day by day
 - The world composed by pixel, which has dimension `M`x`N` pixels.
 - There are `P` Sheeps and `Q` Grass at the begining of the world. They are placed randomly overall the world.
 - Each Sheep has 20 healthPoints.
-- 1 healthPoint is consumed for each creature when one day passed
-- When a Sheep is nearby a Grass, he will eat the grass to refill its healthPoints, each grass ate to increase 2 healthPoints. If a sheep is surround by 2 grass, then he will eat them all, then recover for 4 healthPoints.
-- **Nearby** which means they are neighbour, in anyone of 4 direction(East, South, West, North) that distance is 1.
-- A Sheep randomly choose a direction to move 1 step to it's **nearby** space if that space is empty. otherwise, this sheep won't move if there aren't empty nearby space.
-- A Sheep should eat grass rather than move a step, because only 1 action allowed in 1 day
+- Pass a day
+  - 1 healthPoint is consumed for each creature when one day passed
+  - Each creature only has one movement each day. Either Breed or Move or StandAround.  
 - Dead: 
   - Sheep runs out of it's healthPoint, it dies.
   - Once the Grass is eaten by a Sheep, it dies.
   - When the creature lives long enough, it dies. Sheep only can live for maximum 70 days, Grass for 6 days.
 - Give birth:
-  - Between 50th ~ 55th day for Sheep, it give birth to a new Sheep each day.
-  - Between 3rd ~ 5th day for Grass, it gives birth to a new Grass each day.
+  - Between **50**th ~ **55**th day for Sheep, it give birth to a new Sheep each day.
+  - Between **3**rd ~ **5**th day for Grass, it gives birth to a new Grass each day.
+- Move
+  - A Sheep can move to its 1-step nearby empty position.
+  - **Nearby** which means they are neighbour, in anyone of 4 direction(East, South, West, North) that distance is 1.
+- Eating:
+  - If a Sheep is going to move to a position that standing a Grass, then the Sheep will eat this Grass. Eating a Grass will recover 5 healthPoints
+
+
