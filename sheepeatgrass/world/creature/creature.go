@@ -12,6 +12,7 @@ type ICreature interface {
 	GetAliveDays() int
 	GetPos() geo.Point2D
 	Breed() (ICreature, error)
+	Die()
 }
 
 //IAnimal -
