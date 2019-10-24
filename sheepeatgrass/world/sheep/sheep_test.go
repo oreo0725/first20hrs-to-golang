@@ -6,9 +6,9 @@ import (
 	"os"
 	"testing"
 	"zentest.io/sheepeatgrass/world"
+	"zentest.io/sheepeatgrass/world/creature"
 	"zentest.io/sheepeatgrass/world/geo"
 	"zentest.io/sheepeatgrass/world/grass"
-	"zentest.io/sheepeatgrass/world/creature"
 	"zentest.io/sheepeatgrass/world/sheep"
 )
 
@@ -134,6 +134,84 @@ func TestBreed(t *testing.T) {
 			posNewBorn := newBorn.GetPos()
 			assert.EqualValues(t, newBorn, w.MAP[posNewBorn.X][posNewBorn.Y])
 
+		})
+		tearDown()
+	}
+}
+
+func TestAct(t *testing.T) {
+	type pos struct {
+		x, y int
+	}
+
+	testCases := []struct {
+		desc           string
+		sheepPos       geo.Point2D
+		sheepLivedDays int
+		sheepLifePoint int
+		grassPos       []pos
+		assertFunc     func()
+	}{
+		{
+			desc:           "Sheep should move",
+			sheepPos:       geo.Point2D{1, 1},
+			sheepLivedDays: 49,
+			sheepLifePoint: sheep.SheepDefaultLifePoint,
+			grassPos:       []pos{},
+			assertFunc: func() {
+				assert.NotEqual(t, sheep1.Pos, geo.Point2D{1, 1})
+			},
+		},
+		{
+			desc:           "Sheep should die at day70",
+			sheepPos:       geo.Point2D{0, 0},
+			sheepLivedDays: 70,
+			sheepLifePoint: sheep.SheepDefaultLifePoint,
+			grassPos:       []pos{{0, 1}},
+			assertFunc: func() {
+				assert.Nil(t, w.MAP[sheep1.Pos.X][sheep1.Pos.Y])
+			},
+		},
+		{
+			desc:           "Sheep should die without lifePoints",
+			sheepPos:       geo.Point2D{0, 0},
+			sheepLivedDays: 49,
+			sheepLifePoint: 0,
+			grassPos:       []pos{{0, 1}},
+			assertFunc: func() {
+				assert.Nil(t, w.MAP[sheep1.Pos.X][sheep1.Pos.Y])
+			},
+		},
+		{
+			desc:           "Sheep should breed a baby at day50",
+			sheepPos:       geo.Point2D{0, 0},
+			sheepLivedDays: 49,
+			sheepLifePoint: 0,
+			grassPos:       []pos{{0, 1}},
+			assertFunc: func() {
+				assert.Nil(t, w.MAP[sheep1.Pos.X][sheep1.Pos.Y])
+			},
+		},
+	}
+	for _, tC := range testCases {
+		setup()
+		t.Run(tC.desc, func(t *testing.T) {
+			fmt.Printf("::::::::: Running test: %s ::::::::\n", tC.desc)
+
+			sheep1, _ = sheep.NewSheep("1", tC.sheepPos, w)
+			sheep1.LifePoint = tC.sheepLifePoint
+			sheep1.AliveDays = tC.sheepLivedDays
+			for i, pos := range tC.grassPos {
+				grass.NewGrass(fmt.Sprintf("%d", i), geo.Point2D{pos.x, pos.y}, w)
+			}
+
+			fmt.Println(w)
+
+			var c creature.ICreature = sheep1
+			c.Act()
+			// THEN
+			fmt.Println(w)
+			tC.assertFunc()
 		})
 		tearDown()
 	}
