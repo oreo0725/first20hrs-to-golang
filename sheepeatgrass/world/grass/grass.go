@@ -2,6 +2,7 @@ package grass
 
 import (
 	"fmt"
+	"strconv"
 	"zentest.io/sheepeatgrass/world"
 	"zentest.io/sheepeatgrass/world/creature"
 	"zentest.io/sheepeatgrass/world/geo"
@@ -19,18 +20,36 @@ type Grass struct {
 }
 
 func (g *Grass) Act() {
-	fmt.Printf("I am %T\n", g)
+	//fmt.Printf("I am %v\n", g.GetName())
+
+	if g.IsDead() {
+		return
+	} else if g.isDying() {
+		g.Die()
+	} else if g.canBreed() {
+		g.Breed()
+	}
+	g.AliveDays++
 }
 
-func (g *Grass) GetName() string {
-	return "🌱" + g.Life.Name
+func (g *Grass) canBreed() bool {
+	return g.AliveDays >= 3 && g.AliveDays <= 5
 }
 
-func (g *Grass) IsDead() bool {
+func (g *Grass) isDying() bool {
 	return g.AliveDays >= grassDeathDayLong
 }
 
+func (g *Grass) GetName() string {
+	return "🌱" //+ g.Life.Name
+}
+
+func (g *Grass) IsDead() bool {
+	return g.Life.IsDead
+}
+
 func (g *Grass) Die() {
+	g.Life.IsDead = true
 	var listener creature.IWorldChangeListenser = g.World
 	listener.OnLifeDead(g)
 }
@@ -54,7 +73,8 @@ func (g *Grass) Breed() (creature.ICreature, error) {
 		return nil, fmt.Errorf("No empty space to breed, at[%v]", g.Pos)
 	}
 	g.ChildrenNum++
-	newSheep, err := NewGrass(fmt.Sprintf("%v.%v", g.Name, g.ChildrenNum),
+	gen, _ := strconv.Atoi(g.Name)
+	newSheep, err := NewGrass(fmt.Sprintf("%v", gen*10+g.ChildrenNum),
 		geo.Point2D{availPos.X, availPos.Y},
 		g.World)
 	fmt.Printf("newBorn of [%v] at [%v]\n", g.GetName(), availPos)
@@ -68,7 +88,7 @@ func NewGrass(name string, pos geo.Point2D, w *world.World) (*Grass, error) {
 	if !w.IsAcceptPos(pos.X, pos.Y) {
 		return nil, fmt.Errorf("Point: %v is not empty", pos)
 	}
-	newGrass := &Grass{world.Life{pos, 0, w, 0, name}}
+	newGrass := &Grass{world.Life{Pos: pos, World: w, Name: name}}
 	w.OnNewLifeBorn(newGrass)
 
 	return newGrass, nil
